@@ -6,32 +6,38 @@
  * Return: NUll if tree is not, or otherwise
 **/
 
+int binary_tree_is_perfect_recursive(const binary_tree_t *tree, int d, int level)
+{
+	if (tree == NULL)
+		return (0);
+	
+	if (tree->left == NULL && tree->right == NULL)
+		return (d == level + 1);
+	
+	if (tree->left == NULL || tree-> right == NULL)
+		return (0);
+
+	return (binary_tree_is_perfect_recursive(tree->left, d, level + 1) && binary_tree_is_perfect_recursive(tree->right, d, level + 1));
+}
+
 int binary_tree_is_perfect(const binary_tree_t *tree)
 {
-	size_t left_node = 0, right_node = 0, sam = 0, sum = 0;
 
-	if (tree == NULL)
-	{
-		return (0);
-	}
+	int d = binary_tree_depth(tree);
+	return binary_tree_is_perfect_recursive(tree, d, 0);
+}
 
-	if (tree->left)
+size_t binary_tree_depth(const binary_tree_t *tree)
+{
+	if (tree)
 	{
-		left_node = 1 + binary_tree_is_perfect(tree->left);
-		sum += left_node;
-		printf(" left part %ld\n", sum);
-	}
-	if (tree->right)
-	{
-		right_node = 1 + binary_tree_is_perfect(tree->right);
-		sam += right_node;
-		printf("right part %ld\n", sam);
-	}
-	if (left_node == right_node)
-	{
-		if (tree->left == NULL && tree->right == NULL)
-			return (1);
-		return (binary_tree_is_perfect(tree->left) && binary_tree_is_perfect(tree->right));
+		size_t left_depth = binary_tree_depth(tree->left);
+		size_t right_depth = binary_tree_depth(tree->right);
+
+		return ((left_depth > right_depth) ? left_depth : right_depth) + 1;
 	}
 	return (0);
 }
+
+
+
